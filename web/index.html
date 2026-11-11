@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07100d" />
+  <title>Billiard Lampu — Kontrol Meja</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🎱</div>
+      <div>
+        <h1>Billiard Lampu</h1>
+        <p class="sub">Kontrol lampu &amp; billing meja</p>
+      </div>
+    </div>
+    <div class="status-group">
+      <span class="badge" id="connBadge">Server: menghubungkan…</span>
+      <span class="badge" id="availBadge">Device: offline</span>
+      <span class="badge" id="idBadge">ID: -</span>
+      <span class="badge" id="modeBadge">Mode: -</span>
+      <span class="badge" id="megaBadge">Mega: -</span>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <span class="label">Meja Aktif</span>
+      <strong id="statActive">0 / 20</strong>
+      <span class="hint" id="statFree">20 meja tersedia</span>
+    </div>
+    <div class="stat">
+      <span class="label">Total Durasi</span>
+      <strong id="statTime">00:00:00</strong>
+      <span class="hint">Akumulasi semua meja menyala</span>
+    </div>
+    <div class="stat">
+      <span class="label">Estimasi Biaya</span>
+      <strong id="statCost">Rp 0</strong>
+      <span class="hint" id="statRate">Tarif Rp 30.000 / jam</span>
+    </div>
+    <div class="stat api-stat">
+      <span class="label">API ESP32</span>
+      <form id="apiForm" class="api-config">
+        <input id="apiBaseInput" type="text" placeholder="http://192.168.1.50" autocomplete="off" spellcheck="false" />
+        <button class="btn ghost" type="submit">Sambungkan</button>
+      </form>
+      <span class="hint">IP ESP32 dari Serial Monitor (115200)</span>
+    </div>
+    <div class="stat controls">
+      <label class="rate-field">Tarif / jam
+        <input id="rateInput" type="number" value="30000" min="0" step="1000" inputmode="numeric" />
+      </label>
+      <div class="control-buttons">
+        <button id="demoBtn" class="btn ghost" type="button">Mode Demo: OFF</button>
+        <button id="allOn" class="btn on" type="button">Nyalakan Semua</button>
+        <button id="allOff" class="btn danger" type="button">Matikan Semua</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="modeNotice" class="notice hidden">
+    Mode MANUAL aktif — lampu dikontrol dari tombol panel fisik. Perintah dari web akan ditolak.
+  </div>
+
+  <main>
+    <div class="toolbar">
+      <div class="filters" role="tablist" aria-label="Filter meja">
+        <button class="filter active" type="button" data-filter="all" role="tab">Semua <span id="countAll">20</span></button>
+        <button class="filter" type="button" data-filter="on" role="tab">Menyala <span id="countOn">0</span></button>
+        <button class="filter" type="button" data-filter="off" role="tab">Mati <span id="countOff">20</span></button>
+      </div>
+      <span class="refresh-hint" id="lastUpdate">Auto-refresh tiap 1 detik</span>
+    </div>
+
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <section class="logbox">
+    <div class="loghead">
+      <h2>Log Aktivitas</h2>
+      <span class="device" id="deviceUrl">buka via IP ESP32</span>
+    </div>
+    <div id="log" class="log"></div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

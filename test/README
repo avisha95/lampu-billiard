@@ -1,0 +1,62 @@
+Modbus RS485 Scan Test
+======================
+
+Sketch uji coba sederhana untuk memverifikasi koneksi Modbus RS485
+antara ESP32 dan USB-RS485 adapter ke PC.
+
+=== Fitur ===
+- Menginisialisasi Modbus RTU Slave di Serial2 (GPIO16/RX, GPIO17/TX)
+- Menjalankan mb.task() setiap loop
+- Output status ke Serial Monitor untuk debugging
+- Dapat digunakan untuk tes scan ID ke AViSha Modbus Scanner
+
+=== Cara Penggunaan ===
+
+1. Flash sketch ke ESP32 melalui PlatformIO atau Arduino IDE
+
+2. Buka Serial Monitor (115200 baud)
+   - Lihat output konfirmasi: Slave ID, RX/TX pin, dsb
+
+3. Sambungkan hardware:
+   - ESP32 GPIO16 → Modul RS485 TTL TX
+   - ESP32 GPIO17 → Modul RS485 TTL RX
+   - ESP32 GND  → Modul RS485 TTL GND (WAJIB!)
+   - (Opsional: 5V/3.3V ke VCC modul)
+
+4. Buka AViSha Modbus Scanner di PC
+
+5. Setting di Scanner:
+   - Baudrate: 9600
+   - Parity: None
+   - Data bits: 8
+   - Stop bits: 1
+   - Slave ID: 1 (atau sesuai settingan)
+
+6. Klik "Connect" → pastikan terhubung
+
+7. Klik "Scan Slave ID"
+   - Harus muncul: Slave ID 1 ditemukan
+   - Jika tidak muncul, cek kabel A-B (swap jika perlu)
+   - Pastikan GND ESP32 terhubung dengan GND adapter
+
+8. Klik "Scan Semua Informasi"
+   - Akan menampilkan Function Code yang didukung:
+     - FC 01 (Coil)
+     - FC 02 (Discrete Input)
+     - FC 03 (Holding Register)
+     - FC 04 (Input Register)
+
+=== Troubleshooting ===
+
+Gejala | Penyebab | Solusi
+-------|----------|-------
+Scanner tidak menemukan slave | A/B tertukar | Tukar kabel A dan B di modul RS485
+Scanner tidak baca register | RX/TX tertukar | GPIO16 ke TX modul, GPIO17 ke RX modul
+Semua ID 1-255 terdeteksi | Loopback A-B | Lepas kabel A-B di ujung kabel, jangan dipotong short
+CRC error / data rusak | GND tidak terhubung | Sambungkan GND ESP32 ke GND adapter
+ESP32 restart terus | Pin UART bentrok | Pastikan pakai GPIO16/17, bukan GPIO9/10
+
+=== Catatan ===
+- Sketch ini minimalisir, hanya inisialisasi Modbus tanpa register ribet
+- Untuk uji full fitur (baca/tulis register), lihat sketch di folder src/
+- Library yang dibutuhkan: Modbus by emelianov (terinstall melalui PlatformIO)
